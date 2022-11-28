@@ -85,7 +85,7 @@
     <properties>
         <build.timestamp>${maven.build.timestamp}</build.timestamp>
         <calcite.version>1.32.0</calcite.version>
-        <avatica.version>1.15.0</avatica.version>
+        <avatica.version>1.22.0</avatica.version>
     </properties>
 
     <dependencies>
@@ -112,7 +112,7 @@
         <dependency>
             <groupId>sqlline</groupId>
             <artifactId>sqlline</artifactId>
-            <version>1.8.0</version>
+            <version>1.7.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -124,6 +124,11 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.7.25</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.8</version>
         </dependency>
     </dependencies>
 </project>

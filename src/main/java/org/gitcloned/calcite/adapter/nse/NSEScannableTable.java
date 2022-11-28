@@ -47,8 +47,11 @@ public class NSEScannableTable extends AbstractTable
 
     public Enumerable<Object[]> scan(DataContext dataContext) {
 
+        System.out.println( "\u001B[33m" + "Inside scan Enumerable method of NSEScanable class  --outside try block"+"\u001B[0m");
         try {
+            System.out.println( "\u001B[33m" + "Inside scan Enumerable method of NSCScnable class before json array "+"\u001B[0m");
             final JsonArray results = this.nseSchema.getNseSession().scanTable(this.group, this.table);
+            System.out.println( "\u001B[33m" + "Inside scan Enumerable method of NSCScnable class "+"\u001B[0m");
 
             return new AbstractEnumerable<Object[]>() {
                 public Enumerator<Object[]> enumerator() {
@@ -70,6 +73,8 @@ public class NSEScannableTable extends AbstractTable
      */
     public RelDataType getRowType(RelDataTypeFactory typeFactory) {
 
+        System.out.println( "\u001B[33m" + "Inside RowType Method"+"\u001B[0m");
+
         if (fieldTypes == null || fieldNames == null) {
 
             fieldTypes = new ArrayList<>();
@@ -77,7 +82,7 @@ public class NSEScannableTable extends AbstractTable
 
             fieldTypes.add(NseFieldType.STRING);
             fields.add(NseFieldType.STRING.toType((JavaTypeFactory) typeFactory));
-            fieldNames.add("symbol");
+            fieldNames.add("SYMBOL");
 
             fieldTypes.add(NseFieldType.DOUBLE);
             fields.add(NseFieldType.DOUBLE.toType((JavaTypeFactory) typeFactory));
@@ -123,6 +128,10 @@ public class NSEScannableTable extends AbstractTable
             fields.add(NseFieldType.TIMESTAMP.toType((JavaTypeFactory) typeFactory));
             fieldNames.add("time");
         }
+
+//        System.out.println("Fields --->>>"+fields);
+//        System.out.println("FieldNames --->>>"+fieldNames);
+//        System.out.println("FieldType ---->>>" + fieldTypes);
 
         return typeFactory.createStructType(Pair.zip(fieldNames, fields));
     }

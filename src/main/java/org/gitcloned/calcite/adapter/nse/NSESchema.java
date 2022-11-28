@@ -65,10 +65,10 @@ public class NSESchema extends AbstractSchema {
             NSEScannableTable table = (NSEScannableTable) createTable("nifty", "Nifty50");
             builder.put(table.getTableName().toUpperCase(Locale.getDefault()), table);
 
-            table = (NSEScannableTable) createTable("juniorNifty", "Nifty Junior");
+            table = (NSEScannableTable) createTable("juniorNifty", "NiftyJunior");
             builder.put(table.getTableName().toUpperCase(Locale.getDefault()), table);
 
-            table = (NSEScannableTable) createTable("niftyMidcap50", "Nifty Midcap 50");
+            table = (NSEScannableTable) createTable("niftyMidcap50", "NiftyMidcap50");
             builder.put(table.getTableName().toUpperCase(Locale.getDefault()), table);
 
             table = (NSEScannableTable) createTable("niftyMidcap150Online", "Nifty Midcap 150");

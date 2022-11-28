@@ -11,6 +11,8 @@ public class NSESchemaFactory implements SchemaFactory {
     public Schema create(SchemaPlus schemaPlus, String s, Map<String, Object> map) {
 
         NSESchema schema = new NSESchema((String)map.get("group"));
+
+        System.out.println( "\u001B[33m" + "Returning NSE Schema "+"\u001B[0m");
         return schema;
     }
 }

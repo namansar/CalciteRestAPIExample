@@ -59,6 +59,9 @@ public class NseHTTP {
 
         setAuth(request);
 
+
+        System.out.println(request);
+
         return request;
     }
 }

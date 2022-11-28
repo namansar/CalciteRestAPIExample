@@ -10,10 +10,7 @@ import org.gitcloned.nse.NseFieldType;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.*;
 
 public class NseDataEnumerator implements Enumerator<Object[]> {
 
@@ -237,12 +234,17 @@ public class NseDataEnumerator implements Enumerator<Object[]> {
                     objects[i] = null;
                 } else if (value.isJsonObject()) {
                     objects[i] = convert(fieldTypes[field], value.getAsJsonObject().toString());
+
                 } else if (value.isJsonArray()) {
                     objects[i] = convert(fieldTypes[field], value.getAsJsonArray().toString());
+
                 } else {
                     objects[i] = convert(fieldTypes[field], value.getAsString());
+
                 }
             }
+          //  System.out.println("___________________________________________________________________");
+
             return objects;
         }
     }

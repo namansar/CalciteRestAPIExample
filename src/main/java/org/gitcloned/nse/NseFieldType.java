@@ -45,6 +45,7 @@ public enum NseFieldType {
     public RelDataType toType(JavaTypeFactory typeFactory) {
         RelDataType javaType = typeFactory.createJavaType(clazz);
         RelDataType sqlType = typeFactory.createSqlType(javaType.getSqlTypeName());
+        //System.out.println("****" + sqlType);
         return typeFactory.createTypeWithNullability(sqlType, true);
     }
 
