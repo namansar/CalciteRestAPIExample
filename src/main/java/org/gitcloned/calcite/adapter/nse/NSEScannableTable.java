@@ -11,6 +11,7 @@ import org.apache.calcite.rel.type.RelDataTypeFactory;
 import org.apache.calcite.schema.ScannableTable;
 import org.apache.calcite.schema.impl.AbstractTable;
 import org.apache.calcite.util.Pair;
+import org.gitcloned.nse.MedicareFieldType;
 import org.gitcloned.nse.NseFieldType;
 
 import java.io.IOException;
@@ -27,6 +28,8 @@ public class NSEScannableTable extends AbstractTable
 
     protected List<String> fieldNames;
     protected List<NseFieldType> fieldTypes;
+
+    protected List<MedicareFieldType> fieldTypesMedi;
 
     private List<RelDataType> fields = new ArrayList<>();
 
@@ -51,13 +54,17 @@ public class NSEScannableTable extends AbstractTable
         try {
             System.out.println( "\u001B[33m" + "Inside scan Enumerable method of NSCScnable class before json array "+"\u001B[0m");
             final JsonArray results = this.nseSchema.getNseSession().scanTable(this.group, this.table);
+            System.out.println(results);
+            //final JsonArray postResult = this.nseSchema.getNseSession().scanTable(this.group,this.table);
             System.out.println( "\u001B[33m" + "Inside scan Enumerable method of NSCScnable class "+"\u001B[0m");
 
             return new AbstractEnumerable<Object[]>() {
                 public Enumerator<Object[]> enumerator() {
 
-                    Enumerator<Object[]> enumerator = new NseDataEnumerator(results, fieldTypes, fieldNames);
-                    return enumerator;
+                    //Enumerator<Object[]> enumerator = new NseDataEnumerator(results, fieldTypes, fieldNames);
+                    Enumerator<Object[]> enumerator1 = new MediDataEnumerator(results,fieldTypesMedi,fieldNames);
+                    //System.out.println(enumerator1.toString());
+                    return enumerator1;
                 }
             };
 
@@ -73,63 +80,85 @@ public class NSEScannableTable extends AbstractTable
      */
     public RelDataType getRowType(RelDataTypeFactory typeFactory) {
 
+        final JsonArray results;
+        try {
+            results = this.nseSchema.getNseSession().scanTable(this.group, this.table);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        System.out.println("\u001B[33m"+ "printing json results" + "\u001B[0m");
+        System.out.println(results);
+
         System.out.println( "\u001B[33m" + "Inside RowType Method"+"\u001B[0m");
 
-        if (fieldTypes == null || fieldNames == null) {
+
+        if (fieldTypes == null || fieldNames == null || fieldTypesMedi == null) {
 
             fieldTypes = new ArrayList<>();
             fieldNames = new ArrayList<>();
+            fieldTypesMedi = new ArrayList<>();
 
-            fieldTypes.add(NseFieldType.STRING);
-            fields.add(NseFieldType.STRING.toType((JavaTypeFactory) typeFactory));
-            fieldNames.add("SYMBOL");
+            // Post response updates
+            fieldTypesMedi.add(MedicareFieldType.STRING);
+            fields.add(MedicareFieldType.STRING.toType((JavaTypeFactory) typeFactory));
+            fieldNames.add("FIELDS");
 
-            fieldTypes.add(NseFieldType.DOUBLE);
-            fields.add(NseFieldType.DOUBLE.toType((JavaTypeFactory) typeFactory));
-            fieldNames.add("open");
+            fieldTypesMedi.add(MedicareFieldType.STRING);
+            fields.add(MedicareFieldType.STRING.toType((JavaTypeFactory) typeFactory));
+            fieldNames.add("ID");
 
-            fieldTypes.add(NseFieldType.DOUBLE);
-            fields.add(NseFieldType.DOUBLE.toType((JavaTypeFactory) typeFactory));
-            fieldNames.add("high");
 
-            fieldTypes.add(NseFieldType.DOUBLE);
-            fields.add(NseFieldType.DOUBLE.toType((JavaTypeFactory) typeFactory));
-            fieldNames.add("low");
-
-            fieldTypes.add(NseFieldType.DOUBLE);
-            fields.add(NseFieldType.DOUBLE.toType((JavaTypeFactory) typeFactory));
-            fieldNames.add("previousClose");
-
-            fieldTypes.add(NseFieldType.DOUBLE);
-            fields.add(NseFieldType.DOUBLE.toType((JavaTypeFactory) typeFactory));
-            fieldNames.add("ltp");
-
-            fieldTypes.add(NseFieldType.FLOAT);
-            fields.add(NseFieldType.FLOAT.toType((JavaTypeFactory) typeFactory));
-            fieldNames.add("per");
-
-            fieldTypes.add(NseFieldType.DOUBLE);
-            fields.add(NseFieldType.DOUBLE.toType((JavaTypeFactory) typeFactory));
-            fieldNames.add("trdVolM");
-
-            fieldTypes.add(NseFieldType.DOUBLE);
-            fields.add(NseFieldType.DOUBLE.toType((JavaTypeFactory) typeFactory));
-            fieldNames.add("wkhi");
-
-            fieldTypes.add(NseFieldType.DOUBLE);
-            fields.add(NseFieldType.DOUBLE.toType((JavaTypeFactory) typeFactory));
-            fieldNames.add("wklo");
-
-            fieldTypes.add(NseFieldType.FLOAT);
-            fields.add(NseFieldType.FLOAT.toType((JavaTypeFactory) typeFactory));
-            fieldNames.add("yPC");
-
-            fieldTypes.add(NseFieldType.TIMESTAMP);
-            fields.add(NseFieldType.TIMESTAMP.toType((JavaTypeFactory) typeFactory));
-            fieldNames.add("time");
+//            fieldTypes.add(NseFieldType.STRING);
+//            fields.add(NseFieldType.STRING.toType((JavaTypeFactory) typeFactory));
+//            fieldNames.add("SYMBOL");
+//
+//            fieldTypes.add(NseFieldType.DOUBLE);
+//            fields.add(NseFieldType.DOUBLE.toType((JavaTypeFactory) typeFactory));
+//            fieldNames.add("open");
+//
+//            fieldTypes.add(NseFieldType.DOUBLE);
+//            fields.add(NseFieldType.DOUBLE.toType((JavaTypeFactory) typeFactory));
+//            fieldNames.add("high");
+//
+//            fieldTypes.add(NseFieldType.DOUBLE);
+//            fields.add(NseFieldType.DOUBLE.toType((JavaTypeFactory) typeFactory));
+//            fieldNames.add("low");
+//
+//            fieldTypes.add(NseFieldType.DOUBLE);
+//            fields.add(NseFieldType.DOUBLE.toType((JavaTypeFactory) typeFactory));
+//            fieldNames.add("previousClose");
+//
+//            fieldTypes.add(NseFieldType.DOUBLE);
+//            fields.add(NseFieldType.DOUBLE.toType((JavaTypeFactory) typeFactory));
+//            fieldNames.add("ltp");
+//
+//            fieldTypes.add(NseFieldType.FLOAT);
+//            fields.add(NseFieldType.FLOAT.toType((JavaTypeFactory) typeFactory));
+//            fieldNames.add("per");
+//
+//            fieldTypes.add(NseFieldType.DOUBLE);
+//            fields.add(NseFieldType.DOUBLE.toType((JavaTypeFactory) typeFactory));
+//            fieldNames.add("trdVolM");
+//
+//            fieldTypes.add(NseFieldType.DOUBLE);
+//            fields.add(NseFieldType.DOUBLE.toType((JavaTypeFactory) typeFactory));
+//            fieldNames.add("wkhi");
+//
+//            fieldTypes.add(NseFieldType.DOUBLE);
+//            fields.add(NseFieldType.DOUBLE.toType((JavaTypeFactory) typeFactory));
+//            fieldNames.add("wklo");
+//
+//            fieldTypes.add(NseFieldType.FLOAT);
+//            fields.add(NseFieldType.FLOAT.toType((JavaTypeFactory) typeFactory));
+//            fieldNames.add("yPC");
+//
+//            fieldTypes.add(NseFieldType.TIMESTAMP);
+//            fields.add(NseFieldType.TIMESTAMP.toType((JavaTypeFactory) typeFactory));
+//            fieldNames.add("time");
         }
 
-//        System.out.println("Fields --->>>"+fields);
+       //System.out.println("FieldTypeMedi --->..........................>>"+fieldTypesMedi);
 //        System.out.println("FieldNames --->>>"+fieldNames);
 //        System.out.println("FieldType ---->>>" + fieldTypes);
 
